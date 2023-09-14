@@ -37,7 +37,7 @@ services:
     image: prom/prometheus:latest
     restart: always
     volumes:
-      - prometheus_config:/etc/prometheus/prometheus.yml
+      - ./prometheus_config:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     ports:
