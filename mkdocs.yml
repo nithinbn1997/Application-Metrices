@@ -1,0 +1,69 @@
+site_name: QCL Docs
+theme:
+  name: material
+  palette:
+  - media: '(prefers-color-scheme: light)'
+    scheme: default
+    primary: indigo
+    accent: deep purple
+    toggle:
+      icon: material/lightbulb
+      name: Switch to dark mode
+  - media: '(prefers-color-scheme: dark)'
+    scheme: slate
+    primary: indigo
+    accent: deep purple
+    toggle:
+      icon: material/lightbulb-outline
+      name: Switch to light mode
+  features:
+  - search.suggest
+  - search.highlight
+  - content.tabs.link
+  - navigation.indexes
+  - content.tooltips
+  - navigation.path
+  - content.code.annotate
+  - content.code.copy
+  - content.code.select
+
+nav:
+  - index.md
+  - north_identifiers.md
+  - south_identifiers.md
+  - error_codes.md
+  - API:
+    - Cross Connect:
+      - api/cross_connect/create.md
+      - api/cross_connect/move.md
+      - api/cross_connect/cancel.md
+      - api/cross_connect/deinstall.md
+      - api/cross_connect/list.md
+      - api/cross_connect/details.md
+    - Orders:
+      - api/orders/list.md
+      - api/orders/details.md
+    - Attachment:
+      - api/attachment/create.md
+      - api/attachment/delete.md
+
+markdown_extensions:
+  pymdownx.details:
+  admonition:
+  codehilite:
+  pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_code_format ''
+  pymdownx.tabbed:
+    alternate_style: true
+  attr_list:
+  md_in_html:
+  
+# extra:
+#   version:
+#     provider: mike
+
+plugins:
+  - offline

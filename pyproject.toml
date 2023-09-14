@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "MS3-QCL-TRANSACTION-HANDLER"
+version = "0.1.0"
+description = "Mircoservice for handling all the lattice transactions"
+authors = ["Nikhil Gowtham  <nikhil@vidatt.com>"]
+[tool.poetry.dependencies]
+python = "^3.10.5"
+fastapi = "^0.100.1"
+uvicorn = "^0.23.2"
+requests = "^2.31.0"
+pydantic = "^1.10.7"
+fastapi-utils = "^0.2.1"
+typing_extensions = "^4.5.0"
+python-dotenv = "^1.0.0"
+aioredis = "^2.0.1"
+pymongo = "^4.4.1"
+ipdb = "^0.13.13"
+python-multipart = "^0.0.6"
+[tool.poetry.dev-dependencies]
+ruff = "^0.0.282"
+mypy = "^1.4.1"
+pytest = "^7.4.0"
+pdoc = "^14.0.0"
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

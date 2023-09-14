@@ -1,0 +1,38 @@
+name: Build Pipeline
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  docker_build_push:
+     name: Docker Build and Push
+     runs-on: ubuntu-latest
+            
+     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Set up AWS credentials
+        env:
+           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+           AWS_DEFAULT_REGION: us-east-1
+        run: |
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set default.region $AWS_DEFAULT_REGION
+
+      - name: Build and Push Docker Images
+        run: |
+            docker-compose -f docker-compose.yml build
+            docker images
+            IMAGE_NAME=$(docker image ls --format "{{.Repository}}" | head -n 1)
+            echo $IMAGE_NAME
+            #IMAGE_NAME=ms1_lattice_north_to_qcl_api-server-1
+            TAG=$(date +"%Y%m%d%H%M%S")
+            FULL_IMAGE_NAME=$IMAGE_NAME"_"$TAG
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
+            docker tag $IMAGE_NAME ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/qarbon-lattice-dev-ecr-01:$FULL_IMAGE_NAME
+            docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/qarbon-lattice-dev-ecr-01:$FULL_IMAGE_NAME

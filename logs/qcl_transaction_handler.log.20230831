@@ -1,0 +1,5 @@
+[2023-08-31 17:37:22,538] [DEBUG] [   doc_db_manager.py() - 21] [            __init__()] [Connection to DocumentDB was successful.]
+[2023-08-31 17:37:53,061] [DEBUG] [   doc_db_manager.py() - 21] [            __init__()] [Connection to DocumentDB was successful.]
+[2023-08-31 17:38:26,464] [DEBUG] [   doc_db_manager.py() - 21] [            __init__()] [Connection to DocumentDB was successful.]
+[2023-08-31 17:38:50,439] [DEBUG] [   doc_db_manager.py() - 21] [            __init__()] [Connection to DocumentDB was successful.]
+[2023-08-31 17:39:49,441] [DEBUG] [   doc_db_manager.py() - 21] [            __init__()] [Connection to DocumentDB was successful.]
