@@ -37,12 +37,14 @@ services:
     image: prom/prometheus:latest
     restart: always
     volumes:
-      - D:\QARBON TECH\alpha1.5\ms3_lattice_qcl_transaction_handler\prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_config:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     ports:
       - "9090:9090"
 
+volumes:
+  prometheus_config:
 
 
 
