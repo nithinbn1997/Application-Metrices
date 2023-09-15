@@ -21,6 +21,7 @@ ruff = "^0.0.282"
 mypy = "^1.4.1"
 pytest = "^7.4.0"
 pdoc = "^14.0.0"
+prometheus-client = "^0.17.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
