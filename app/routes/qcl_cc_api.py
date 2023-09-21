@@ -8,7 +8,7 @@ from fastapi import (
     Response,
     FastAPI
 )   
-
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from app import logger
 from app.managers.transaction_manager import transaction_manager
 from app.schema.order_cc import QclOrderDataObject
@@ -35,13 +35,36 @@ router = APIRouter(
     tags=["QCL Crossconnect APIs"],
 )
 
+router1 = APIRouter(
+    tags=["Application Metrics"],
+)
+
+@router1.get("/metrics")
+async def metrics():
+   
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+#order cross connect
 order_counter = Counter('qcl_crossconnect_order_total', 'Total QCL crossconnect orders')
 details_counter = Counter('qcl_crossconnect_details_total', 'Total QCL crossconnect details requests')
 list_counter = Counter('qcl_crossconnect_list_total', 'Total QCL crossconnect list requests')
-
 active_connections = Gauge('crossconnect_active_connections', 'Number of active connections')
 request_duration = Histogram('crossconnect_request_duration_seconds', 'Request duration in seconds')
 
+#deinstall cross connct
+deinstall_count = Counter('qcl_deinstall_request_count', 'Count of API deinstall requests')
+# deinstall_error_count = Counter('qcl_deinstall_error_count', 'Count of API deinstall errors')
+deinstall_request_duration = Histogram('qcl_deinstall_request_duration_seconds', 'API deinstall request duration in seconds')
+
+#move cross connct
+move_count = Counter('qcl_move_request_count', 'Count of API move requests')
+# move_error_count = Counter('qcl_move_error_count', 'Count of API move errors')
+move_request_duration = Histogram('qcl_move_request_duration_seconds', 'API move request duration in seconds')
+
+#cancel cross connct
+cancel_count = Counter('qcl_cancel_request_count', 'Count of API cancel requests')
+# cancel_error_count = Counter('qcl_cancel_error_count', 'Count of API cancel errors')
+cancel_request_duration = Histogram('qcl_cancel_request_duration_seconds', 'API cancel request duration in seconds')
 
 
 @router.post("/qcl_crossconnect_order")
@@ -119,13 +142,6 @@ def process_crossconnect_order(
     return {"lattice_transaction_id": qcl_transaction_id}
 
 
-
-# @router.get("/metrics")
-# def metrices():
-#     return Response(
-#         content= prometheus_client.generate_latest(),
-#         media_type="text/plain",
-#     )
 
 
 @router.post("/qcl_crossconnect_details")
@@ -254,6 +270,7 @@ def order_deinstall_crossconnect(
         crossconnect_actions.process_deinstall_order,
         data
     )
+    deinstall_count.inc()
 
     return {"lattice_transaction_id": qcl_transaction_id}
 
@@ -321,6 +338,7 @@ def order_move_crossconnect(
         crossconnect_actions.process_move_order, 
         data
     )
+    move_count.inc()
     return {"lattice_transaction_id": qcl_transaction_id}
 
 
@@ -382,4 +400,5 @@ async def request_cancel_crossconnct_order(
     await transaction_manager.add_new_transaction_data(data)
     log.debug("added transaction data")
     background_tasks.add_task(crossconnect_actions.process_cancel_order, data)
+    cancel_count.inc()
     return {"lattice_transaction_id": qcl_transaction_id}
