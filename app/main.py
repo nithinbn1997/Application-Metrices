@@ -7,7 +7,11 @@ from app.routes import (
     qcl_attachments_api
 )
 from app.actions import transaction_actions
+from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 
+from fastapi import (
+    Response
+)  
 
 from fastapi import FastAPI, HTTPException
 
@@ -22,6 +26,10 @@ app = FastAPI(
 
 
 
+@app.get("/metrics")
+async def metrics():
+   
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 @app.get("/")
 async def root():
