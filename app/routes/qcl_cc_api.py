@@ -6,6 +6,7 @@ from fastapi import (
     APIRouter,
     BackgroundTasks,
     Response,
+    FastAPI
 )   
 
 from app import logger
@@ -26,6 +27,13 @@ from app.actions import crossconnect_actions
 
 
 log = logger.get_logger()
+
+app = FastAPI()
+
+@app.get("/metrics")
+async def metrics():
+   
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 router = APIRouter(
     prefix="/api/v1/accounting/crossconnect",
@@ -122,9 +130,7 @@ def process_crossconnect_order(
     # new_transaction_id.inc(qcl_transaction_id)
     return {"lattice_transaction_id": qcl_transaction_id}
 
-@router.get("/metrics")
-async def metrics():
-    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
 
 # @router.get("/metrics")
 # def metrices():
