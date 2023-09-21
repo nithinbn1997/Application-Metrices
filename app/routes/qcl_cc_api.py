@@ -1,5 +1,5 @@
 import json
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import Counter, Gauge, Summary, Histogram
 from fastapi.requests import Request
 from fastapi.encoders import jsonable_encoder
 from fastapi import (
@@ -39,17 +39,9 @@ order_counter = Counter('qcl_crossconnect_order_total', 'Total QCL crossconnect 
 details_counter = Counter('qcl_crossconnect_details_total', 'Total QCL crossconnect details requests')
 list_counter = Counter('qcl_crossconnect_list_total', 'Total QCL crossconnect list requests')
 
-# Create a custom Prometheus Counter metric to count the number of cross-connect orders
-# crossconnect_order_counter = Counter(
-#     'crossconnect_orders_total',
-#     'Total number of cross-connect orders processed'
-# )
+active_connections = Gauge('crossconnect_active_connections', 'Number of active connections')
+request_duration = Histogram('crossconnect_request_duration_seconds', 'Request duration in seconds')
 
-# # Create a custom Prometheus Counter metric to count errors (if needed)
-# error_counter = Counter(
-#     'crossconnect_order_errors_total',
-#     'Total number of cross-connect order errors'
-# )
 
 
 @router.post("/qcl_crossconnect_order")
@@ -122,7 +114,8 @@ def process_crossconnect_order(
         data
     )
     order_counter.inc()
-    # new_transaction_id.inc(qcl_transaction_id)
+    active_connections.set(5)
+    request_duration.observe(0.5) 
     return {"lattice_transaction_id": qcl_transaction_id}
 
 

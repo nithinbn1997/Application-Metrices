@@ -7,7 +7,7 @@ from app.routes import (
     qcl_attachments_api
 )
 from app.actions import transaction_actions
-from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
 from fastapi import (
     Response
