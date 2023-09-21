@@ -32,20 +32,20 @@ router = APIRouter(
     tags=["QCL Crossconnect APIs"],
 )
 
+order_counter = Counter('qcl_crossconnect_order_total', 'Total QCL crossconnect orders')
+details_counter = Counter('qcl_crossconnect_details_total', 'Total QCL crossconnect details requests')
+list_counter = Counter('qcl_crossconnect_list_total', 'Total QCL crossconnect list requests')
+
 # Create a custom Prometheus Counter metric to count the number of cross-connect orders
-crossconnect_order_counter = Counter(
-    'crossconnect_orders_total',
-    'Total number of cross-connect orders processed'
-)
+# crossconnect_order_counter = Counter(
+#     'crossconnect_orders_total',
+#     'Total number of cross-connect orders processed'
+# )
 
-# Create a custom Prometheus Counter metric to count errors (if needed)
-error_counter = Counter(
-    'crossconnect_order_errors_total',
-    'Total number of cross-connect order errors'
-)
-
-# new_transaction_id = prometheus_client.Counter(
-#     "transaction_id"
+# # Create a custom Prometheus Counter metric to count errors (if needed)
+# error_counter = Counter(
+#     'crossconnect_order_errors_total',
+#     'Total number of cross-connect order errors'
 # )
 
 
@@ -118,7 +118,7 @@ def process_crossconnect_order(
         crossconnect_actions.process_cross_connect_order,
         data
     )
-    crossconnect_order_counter.inc()
+    order_counter.inc()
     # new_transaction_id.inc(qcl_transaction_id)
     return {"lattice_transaction_id": qcl_transaction_id}
 
@@ -158,6 +158,7 @@ def get_cross_connect_details(request: QCLDataObject):
             .get("qcl_cc_id")
         )
     }
+    details_counter.inc()
     return crossconnect_actions.get_cc_details(data)
 
 
@@ -180,6 +181,7 @@ def get_cross_connect_list(request: QCLDataObject):
             "qcl_destination_id"
         )
     }
+    list_counter.inc()
     return crossconnect_actions.get_cc_list(data)
 
 
