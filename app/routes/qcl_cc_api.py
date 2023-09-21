@@ -8,7 +8,6 @@ from fastapi import (
     Response,
     FastAPI
 )   
-from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 from app import logger
 from app.managers.transaction_manager import transaction_manager
 from app.schema.order_cc import QclOrderDataObject
@@ -35,14 +34,6 @@ router = APIRouter(
     tags=["QCL Crossconnect APIs"],
 )
 
-router1 = APIRouter(
-    tags=["Application Metrics"],
-)
-
-@router1.get("/metrics")
-async def metrics():
-   
-    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 #order cross connect
 order_counter = Counter('qcl_crossconnect_order_total', 'Total QCL crossconnect orders')
